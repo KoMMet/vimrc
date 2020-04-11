@@ -1,8 +1,9 @@
+
 "
-" Vim8用サンプル vimrc
+" Vim8
 "
 if has('win32')                   " Windows 32bit または 64bit ?
-  set encoding=cp932              " cp932 が嫌なら utf-8 にしてください
+  set encoding=utf-8              
 else
   set encoding=utf-8
 endif
@@ -17,8 +18,8 @@ source $VIMRUNTIME/defaults.vim
 " 分からないオプション名は先頭に ' を付けてhelpしましょう。例:
 " :h 'helplang
 
-packadd! vimdoc-ja                " 日本語help の読み込み
-set helplang=ja,en                " help言語の設定
+"packadd! vimdoc-ja                " 日本語help の読み込み
+"set helplang=ja,en                " help言語の設定
 
 set scrolloff=0
 set laststatus=2                  " 常にステータス行を表示する
@@ -104,9 +105,6 @@ if has('autocmd')
 endif
 
 "-------------------------------------------------------------------------------
-" カラースキームの設定
-colorscheme torte
-
 try
   silent hi CursorIM
 catch /E411/
@@ -115,21 +113,45 @@ catch /E411/
 endtry
 
 "vim:set et ts=2 sw=0:
-set nu
-set title
-set showmatch
-syntax on
-set tabstop=2
-set shiftwidth=2
-set smartindent
-set cursorline
 set wildmode=list:longest
-" screen
-set t_Co=256
-colorscheme koehler
-set noswapfile
-set showcmd
-set expandtab
-set hlsearch
+"colorscheme lucius
+set background=dark
+
+set virtualedit=block
+set backspace=indent,eol,start
+set wildmenu
+set wildmode=full
 set incsearch
+set showmatch matchtime=1
+set laststatus=2
+set showcmd
+
+set expandtab
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set nu
+syntax on
+
+
+func! STL()
+  let barWidth = &columns / 6
+  let barWidth = barWidth < 3 ? 3 : barWidth
+  let n = line('$') > 1 ? line('$') - 1 : line('$')
+  let buf_top    = (line('w0') - 1) * (barWidth - 1) / n
+  let buf_bottom = (line('w$')    ) * (barWidth - 1) / n
+  let cursor     = (line('.')  - 1) * (barWidth - 1) / n
+  let n1 = buf_top
+  let n2 = cursor - n1
+  let n2 = n1 + n2 >= barWidth ? barWidth - n1 - 1 : n2
+  let n3 = buf_bottom - cursor
+  let n3 = n1 + n2 + n3 >= barWidth ? barWidth - n1 - n2 - 1 : n3
+  let n4 = barWidth - n1 - n2 - n3 - 1
+  let bar = '['.repeat(' ', n1).repeat('-', n2).'@'.repeat('-', n3).repeat(' ', n4).']'
+  let stl_left = ' '
+  let stl_right = ' %<%F %m%r%h%w%=[%{&fenc},%{&ff},%Y] (%03l/%03L,%03v) '
+  return stl_left.bar.stl_right
+endfunc
+set statusline=%!STL()
+
 
