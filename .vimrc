@@ -153,4 +153,3 @@ func! STL()
   return stl_left.bar.stl_right
 endfunc
 set statusline=%!STL()
-
