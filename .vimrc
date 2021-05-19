@@ -154,4 +154,3 @@ func! STL()
 endfunc
 set statusline=%!STL()
 
-
